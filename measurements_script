@@ -1,0 +1,24 @@
+#!/bin/bash
+
+echo "****************************" >> measure_result.md
+echo "method * real * user * sys *" >> measure_result.md
+
+/usr/bin/time unzip ../dataset.json.zip \
+  | mongoimport --drop -d markets -c markets --jsonArray --writeConcern '{w:1,j:false,wtimeout:500}' \
+  | sed "s/(.)+ real         (.)+ user         (.)+ sys/w:1,j:0 * $1 * $2 * $3 */"  \
+  >> measure_result.md
+
+/usr/bin/time unzip ../dataset.json.zip \
+  | mongoimport --drop -d markets -c markets --jsonArray --writeConcern '{w:1,j:true,wtimeout:500}' \
+  | sed "s/(.)+ real         (.)+ user         (.)+ sys/w:1,j:1 * $1 * $2 * $3 */" \
+  >> measure_result.md
+
+/usr/bin/time unzip ../dataset.json.zip \
+  | mongoimport --drop -d markets -c markets --jsonArray --writeConcern '{w:2,j:false,wtimeout:500}' \
+  | sed "s/(.)+ real         (.)+ user         (.)+ sys/w:2,j:0 * $1 * $2 * $3 */" \
+  >> measure_result.md
+
+/usr/bin/time unzip ../dataset.json.zip \
+  | mongoimport --drop -d markets -c markets --jsonArray --writeConcern '{w:2,j:true,wtimeout:500}' \
+  | sed "s/(.)+ real         (.)+ user         (.)+ sys/w:2,j:1 * $1 * $2 * $3 */" \
+  >> measure_result.md
