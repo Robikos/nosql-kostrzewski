@@ -248,14 +248,47 @@ Aby oszacować różnice w czasach importu, zaimportuję też bazę danych punk
 
 # Tabela wyników
 
-| Kolekcja  | Tryb        | Wielkość kolekcji | Średni Czas importu |
-|-----------|-------------|-------------------|---------------------|
-| Markets   | Standalone  | 2 000 000         | 25,12s              |
-| Markets   | W: 1, J: 1  | 2 000 000         | 1 min 12s.          |
-| Markets   | W: 1, J: 0  | 2 000 000         | 1 min 5s.           |
-| Markets   | W: 2, J: 1  | 2 000 000         | 1 min 2s:30         |
-| Markets   | W: 2, J: 0  | 2 000 000         | 1 min 8s.           |
-| PktAddr   | W: 1, J: 1  | ok 300 000        | 14s                 |
+| Kolekcja  | Tryb        | Wielkość kolekcji | Real       | User       | System     |
+|-----------|-------------|-------------------|------------|------------|------------|
+| Markets   | Standalone  | 2 000 000         | 19.68s     | 27.94s     | 2.2s       |
+| Markets   | W: 1, J: 1  | 2 000 000         | 28.08s     | 40.43s     | 3.08s      |
+| Markets   | W: 1, J: 0  | 2 000 000         | 25.35s     | 36.5s      | 2.8s       |
+| Markets   | W: 2, J: 1  | 2 000 000         | 24.18s     | 34.8s      | 2.65s      |
+| Markets   | W: 2, J: 0  | 2 000 000         | 26.52s     | 38.2s      | 2.9s       |
+| PktAddr   | W: 1, J: 1  | ok 300 000        | 5.46s      | 7.7s       | 0.6s       |
 
 
+# Zadanie 2 - Projekt na zaliczenie
+
+## Założenie
+
+Projekt wykonuje i mierzy średnie czasy podstawowych operacji na bazie danych MongoDB.
+
+Skrypt napisany jest w języku Ruby przy użyciu gema Mongo - Ruby driver.
+
+## Uruchomienie skryptu
+
+Należy podać nazwę bazy danych i kolekcji. Przykładowe uruchomienie:
+
+`ruby ruby-project/project1.rb markets markets`
+
+## Eksperymenty
+
+W skrypcie sprawdzono następujące operacje:
+
+* Number of places in document
+* Market with the biggest area
+* First market full info
+* Find first 5 cities of markets
+* Count of Markets with bigger area than the first market
+
+## Wyniki
+
+| Kolekcja  | Operacja                          | Wielkość kolekcji | Real                    | User       | System     |
+|-----------|-----------------------------------|-------------------|-------------------------|------------|------------|
+| Markets   | Number of places in document      | 2 000 000         | 0.0003692000056616962s  | 0.0s       | 0.0s       |
+| Markets   | Market with the biggest area      | 2 000 000         | 3.6317685999907554s     | 0.0s       | 0.0s       |
+| Markets   | First market full info            | 2 000 000         | 0.0005043999990448356s  | 0.0s       | 0.0s       |
+| Markets   | Find first 5 cities of markets    | 2 000 000         | 2.300000051036477e-05s  | 0.0s       | 0.0s       |
+| Markets   | Count of Markets area>200         | 2 000 000         | 1.88s                   | 0.0s       | 0.0s       |
 
