@@ -2,6 +2,7 @@
 
 require "mongo"
 require "benchmark"
+require "pry"
 
 class Connection
   def initialize(db_name, db_collection)
@@ -37,12 +38,12 @@ class Main
     puts "Market with the biggest area - #{biggest_area}"
     print_benchmark { biggest_area }
 
-    puts "Find first 5 cities of markets - #{five_first_cities}"
-    print_benchmark { five_first_cities }
-
     centre_point = first_market
     puts "First market full info - #{first_market}"
     print_benchmark { first_market }
+
+    puts "Find first 5 cities of markets - #{five_first_cities}"
+    print_benchmark { five_first_cities }
 
     puts "Count of Markets with bigger area than the first market"
     puts "- #{count_bigger_markets_than_first(centre_point)}"
@@ -52,7 +53,7 @@ class Main
   private
 
   def print_benchmark(&block)
-    n = 20
+    n = 5
     result = Benchmark.measure { n.times { yield } }
     print_result = {
       real: result.real / n.to_f,
@@ -69,11 +70,11 @@ class Main
   end
 
   def biggest_area
-    connection.collection.find("$orderby" => "area").limit(1).first
+    connection.collection.find({}).sort("area" => 1).limit(1).first
   end
 
   def five_first_cities
-    connection.collection.find({ city: 1 }).limit(5)
+    connection.collection.find(city: 1).limit(5)
   end
 
   def first_market
@@ -81,8 +82,10 @@ class Main
   end
 
   def count_bigger_markets_than_first(centre_point)
-    connection.collection.aggregation(
-      { "$match" => { area: { "$gte" => centre_point[:area] } } }
+    connection.collection.aggregate(
+      [
+        { "$match" => { area: { "$gte" => centre_point["area"] } } },
+      ]
     ).count
   end
 
